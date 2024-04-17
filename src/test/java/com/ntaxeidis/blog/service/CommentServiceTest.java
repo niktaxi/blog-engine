@@ -35,10 +35,9 @@ public class CommentServiceTest {
 		Post post = createTestPost();
 
 		NewCommentDto comment = new NewCommentDto();
-		comment.setPostId(post.getId());
 		comment.setAuthor("Author");
 		comment.setContent("Content");
-		Long commentId = commentService.addComment(comment);
+		Long commentId = commentService.addComment(post.getId(), comment);
 
 		assertThat("Comment id shouldn't be null", commentId, notNullValue());
 	}
@@ -58,11 +57,10 @@ public class CommentServiceTest {
 		Post post = createTestPost();
 
 		NewCommentDto comment = new NewCommentDto();
-		comment.setPostId(post.getId());
 		comment.setAuthor("Author");
 		comment.setContent("Content");
 
-		commentService.addComment(comment);
+		commentService.addComment(post.getId(), comment);
 
 		List<CommentDto> comments = commentService.getCommentsForPost(post.getId());
 

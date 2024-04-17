@@ -2,6 +2,7 @@ package com.ntaxeidis.blog.rest;
 
 import com.ntaxeidis.blog.model.dto.CommentDto;
 import com.ntaxeidis.blog.model.dto.NewCommentDto;
+import com.ntaxeidis.blog.model.dto.NewPostDto;
 import com.ntaxeidis.blog.service.CommentService;
 import com.ntaxeidis.blog.service.PostService;
 
@@ -30,8 +31,14 @@ public class PostController {
 
 	@PostMapping(value = "/{id}/comment")
 	@ResponseStatus(HttpStatus.CREATED)
-	public void saveComment(@PathVariable Long id, NewCommentDto newComment) {
-		commentService.addComment(newComment);
+	public Long saveComment(@PathVariable Long id, @RequestBody NewCommentDto newComment) {
+		return commentService.addComment(id, newComment);
+	}
+
+	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	public Long savePost(@RequestBody NewPostDto newPost) {
+		return postService.addPost(newPost);
 	}
 
 	@GetMapping(value = "/{id}")

@@ -48,9 +48,9 @@ public class CommentService {
 	 *
 	 * @throws IllegalArgumentException if there is no blog post for passed newCommentDto.postId
 	 */
-	public Long addComment(NewCommentDto newCommentDto) {
-		Post post = postRepository.findById(newCommentDto.getPostId())
-			.orElseThrow(() -> new PostNotFoundException(newCommentDto.getPostId()));
+	public Long addComment(Long postId, NewCommentDto newCommentDto) {
+		Post post = postRepository.findById(postId)
+			.orElseThrow(() -> new PostNotFoundException(postId));
 
 		Comment newComment = new Comment(newCommentDto.getContent(), newCommentDto.getAuthor());
 		newComment.setPost(post);

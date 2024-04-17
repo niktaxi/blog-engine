@@ -80,7 +80,7 @@ public class PostControllerTest extends AbstractControllerTest {
 		NewCommentDto newComment = createComment("Test content", "John Doe");
 
 		// when
-		when(commentService.addComment(newComment)).thenReturn(1L);
+		when(commentService.addComment(1L, newComment)).thenReturn(1L);
 
 		// then
 		mockMvc.perform(post("/posts/1/comment")

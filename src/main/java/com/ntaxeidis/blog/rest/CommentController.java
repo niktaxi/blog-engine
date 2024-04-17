@@ -8,28 +8,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Controller
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/comments")
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentService commentService;
 
-	@GetMapping(value = "/{id}/comments")
-	@ResponseStatus(HttpStatus.OK)
-	public List<CommentDto> getComments(@PathVariable Long id) {
-		return commentService.getCommentsForPost(id);
-	}
-
-	@PostMapping(value = "/{id}/comment")
-	@ResponseStatus(HttpStatus.CREATED)
-	public void saveComment(@PathVariable Long id, NewCommentDto newComment) {
-		commentService.addComment(newComment);
-	}
-
-	@DeleteMapping(value = "/comment/{id}")
+	@DeleteMapping(value = "/{id}")
 	@ResponseStatus(HttpStatus.RESET_CONTENT)
 	public void deleteComment(@PathVariable Long id) {
 		commentService.deleteComment(id);

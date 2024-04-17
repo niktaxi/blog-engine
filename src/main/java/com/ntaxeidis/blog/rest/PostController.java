@@ -1,5 +1,8 @@
 package com.ntaxeidis.blog.rest;
 
+import com.ntaxeidis.blog.model.dto.CommentDto;
+import com.ntaxeidis.blog.model.dto.NewCommentDto;
+import com.ntaxeidis.blog.service.CommentService;
 import com.ntaxeidis.blog.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -9,13 +12,27 @@ import org.springframework.web.bind.annotation.*;
 
 import com.ntaxeidis.blog.model.dto.PostDto;
 
+import java.util.List;
+
 @Controller
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
-
+	private final CommentService commentService;
 	private final PostService postService;
+
+	@GetMapping(value = "/{id}/comments")
+	@ResponseStatus(HttpStatus.OK)
+	public List<CommentDto> getComments(@PathVariable Long id) {
+		return commentService.getCommentsForPost(id);
+	}
+
+	@PostMapping(value = "/{id}/comment")
+	@ResponseStatus(HttpStatus.CREATED)
+	public void saveComment(@PathVariable Long id, NewCommentDto newComment) {
+		commentService.addComment(newComment);
+	}
 
 	@GetMapping(value = "/{id}")
 	@ResponseStatus(HttpStatus.OK)

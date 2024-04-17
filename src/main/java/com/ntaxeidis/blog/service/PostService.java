@@ -3,6 +3,7 @@ package com.ntaxeidis.blog.service;
 
 import com.ntaxeidis.blog.exception.PostNotFoundException;
 import com.ntaxeidis.blog.model.Post;
+import com.ntaxeidis.blog.model.dto.NewPostDto;
 import org.springframework.stereotype.Service;
 
 import com.ntaxeidis.blog.model.dto.PostDto;
@@ -27,4 +28,9 @@ public class PostService {
 		Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
 		postRepository.delete(post);
     }
+
+	public Long addPost(NewPostDto newPost) {
+		Post savedPost = postRepository.save(new Post(newPost.getTitle(), newPost.getContent()));
+		return savedPost.getId();
+	}
 }

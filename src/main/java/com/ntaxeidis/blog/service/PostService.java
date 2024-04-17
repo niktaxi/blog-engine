@@ -1,6 +1,8 @@
 package com.ntaxeidis.blog.service;
 
 
+import com.ntaxeidis.blog.exception.PostNotFoundException;
+import com.ntaxeidis.blog.model.Post;
 import org.springframework.stereotype.Service;
 
 import com.ntaxeidis.blog.model.dto.PostDto;
@@ -20,4 +22,9 @@ public class PostService {
 				.map(post -> new PostDto(post.getTitle(), post.getContent(), post.getCreationDate()))
 				.orElse(null);
 	}
+
+    public void deletePost(Long id) {
+		Post post = postRepository.findById(id).orElseThrow(() -> new PostNotFoundException(id));
+		postRepository.delete(post);
+    }
 }

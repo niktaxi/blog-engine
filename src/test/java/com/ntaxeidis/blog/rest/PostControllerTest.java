@@ -6,8 +6,10 @@ import java.time.LocalDateTime;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,6 +33,15 @@ public class PostControllerTest extends AbstractControllerTest {
 				.andExpect(jsonPath("$.title", is("Title")))
 				.andExpect(jsonPath("$.content", is("content")))
 				.andExpect(jsonPath("$.creationDate", is(creationDate.toString())));
+	}
 
+	@Test
+	public void shouldDeletePost() throws Exception {
+		// when
+		doNothing().when(postService).deletePost(1L);
+
+		// then
+		mockMvc.perform(delete("/posts/1").accept(APPLICATION_JSON_UTF8))
+			.andExpect(status().isResetContent());
 	}
 }

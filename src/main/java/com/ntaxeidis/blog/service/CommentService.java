@@ -1,5 +1,6 @@
 package com.ntaxeidis.blog.service;
 
+import com.ntaxeidis.blog.exception.CommentNotFoundException;
 import com.ntaxeidis.blog.exception.PostNotFoundException;
 import com.ntaxeidis.blog.model.Comment;
 import com.ntaxeidis.blog.model.Post;
@@ -56,5 +57,11 @@ public class CommentService {
 
 		Comment savedComment = commentRepository.save(newComment);
 		return savedComment.getId();
+	}
+
+	public void deleteComment(Long id) {
+		Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
+
+		commentRepository.delete(comment);
 	}
 }

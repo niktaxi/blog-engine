@@ -13,10 +13,10 @@ import com.ntaxeidis.blog.model.dto.NewCommentDto;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -35,7 +35,7 @@ public class CommentControllerTest extends AbstractControllerTest {
 		when(commentService.getCommentsForPost(1L)).thenReturn(comments);
 
 		// then
-		mockMvc.perform(get("/posts/1/comments").accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get("/post/1/comments").accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$", hasSize(1)))
 				.andExpect(jsonPath("$[0].id", is(2)))
@@ -56,11 +56,21 @@ public class CommentControllerTest extends AbstractControllerTest {
 		when(commentService.addComment(newComment)).thenReturn(1L);
 
 		// then
-		mockMvc.perform(post("/posts/1/comments")
+		mockMvc.perform(post("/post/1/comment")
 				.content(commentBody)
 				.contentType(APPLICATION_JSON_UTF8)
 				.accept(MediaType.APPLICATION_JSON))
 				.andExpect(status().isCreated());
+	}
+
+	@Test
+	public void shouldDeleteComment() throws Exception {
+		// when
+		doNothing().when(commentService).deleteComment(1L);
+
+		// then
+		mockMvc.perform(delete("/post/comment/1").accept(APPLICATION_JSON_UTF8))
+			.andExpect(status().isResetContent());
 	}
 
 	private NewCommentDto createComment(String content, String author) {

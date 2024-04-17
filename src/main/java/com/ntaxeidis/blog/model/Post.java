@@ -1,5 +1,9 @@
 package com.ntaxeidis.blog.model;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,6 +15,8 @@ import java.time.LocalDateTime;
 import javax.persistence.OneToMany;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Post {
 
 	@Id
@@ -22,51 +28,9 @@ public class Post {
 	@Column(length = 4096)
 	private String content;
 
+	@CreatedDate
 	private LocalDateTime creationDate;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "post")
 	private List<Comment> comments;
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
-
-	public void setCreationDate(LocalDateTime creationDate) {
-		this.creationDate = creationDate;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<Comment> comments) {
-		this.comments = comments;
-	}
-
-	public Post() {
-	}
 }

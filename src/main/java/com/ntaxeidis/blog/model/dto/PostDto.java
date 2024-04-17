@@ -1,7 +1,12 @@
 package com.ntaxeidis.blog.model.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
+@Data
+@AllArgsConstructor
 public class PostDto {
 
 	private String title;
@@ -9,22 +14,4 @@ public class PostDto {
 	private String content;
 
 	private LocalDateTime creationDate;
-
-	public PostDto(String title, String content, LocalDateTime creationDate) {
-		this.title = title;
-		this.content = content;
-		this.creationDate = creationDate;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public LocalDateTime getCreationDate() {
-		return creationDate;
-	}
 }

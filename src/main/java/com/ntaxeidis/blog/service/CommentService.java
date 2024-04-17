@@ -32,7 +32,7 @@ public class CommentService {
 	 * @return list of comments sorted by creation date descending - most recent first
 	 */
 	public List<CommentDto> getCommentsForPost(Long postId) {
-		Post post = postRepository.findById(postId).get();
+		Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
 
 		return post.getComments().stream()
 			.sorted(Comparator.comparing(Comment::getCreationDate).reversed())

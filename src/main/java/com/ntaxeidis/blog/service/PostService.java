@@ -21,7 +21,7 @@ public class PostService {
 	public PostDto getPost(Long id) {
 		return postRepository.findById(id)
 				.map(post -> new PostDto(post.getTitle(), post.getContent(), post.getCreationDate()))
-				.orElse(null);
+				.orElseThrow(() -> new PostNotFoundException(id));
 	}
 
     public void deletePost(Long id) {

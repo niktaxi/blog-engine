@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 @Entity
@@ -23,7 +24,7 @@ public class Comment {
 
 	private String author;
 
-	@CreatedDate
+	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@ManyToOne

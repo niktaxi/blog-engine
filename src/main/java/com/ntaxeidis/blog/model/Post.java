@@ -1,7 +1,9 @@
 package com.ntaxeidis.blog.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.util.List;
@@ -28,9 +30,14 @@ public class Post {
 	@Column(length = 4096)
 	private String content;
 
-	@CreatedDate
+	@CreationTimestamp
 	private LocalDateTime creationDate;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "post")
 	private List<Comment> comments;
+
+	public Post(String title, String content) {
+		this.title = title;
+		this.content = content;
+	}
 }

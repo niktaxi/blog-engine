@@ -1,16 +1,14 @@
 package com.ntaxeidis.blog.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.*;
 
 @Entity
 @Data
@@ -20,18 +18,28 @@ public class Comment {
 	@GeneratedValue
 	private Long id;
 
-	private String comment;
+	private String content;
 
 	private String author;
+
+	@ColumnDefault("0")
+	@Generated(GenerationTime.INSERT)
+	private Long likes;
 
 	@CreationTimestamp
 	private LocalDateTime creationDate;
 
+	@UpdateTimestamp
+	private	LocalDateTime modifiedDate;
+
 	@ManyToOne
 	private Post post;
 
-	public Comment(String comment, String author) {
-		this.comment = comment;
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Comment> thread;
+
+	public Comment(String content, String author) {
+		this.content = content;
 		this.author = author;
 	}
 }

@@ -1,10 +1,8 @@
 package com.ntaxeidis.blog.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
+import org.hibernate.annotations.*;
 
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -30,8 +28,15 @@ public class Post {
 	@Column(length = 4096)
 	private String content;
 
+	@ColumnDefault("0")
+	@Generated(GenerationTime.INSERT)
+	private Long likes;
+
 	@CreationTimestamp
 	private LocalDateTime creationDate;
+
+	@UpdateTimestamp
+	private	LocalDateTime modifiedDate;
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "post")
 	private List<Comment> comments;

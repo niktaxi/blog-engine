@@ -51,21 +51,4 @@ public class CommentServiceTest {
 		postRepository.save(post);
 		return post;
 	}
-
-	@Test
-	public void shouldReturnAddedComment() {
-		Post post = createTestPost();
-
-		NewCommentDto comment = new NewCommentDto();
-		comment.setAuthor("Author");
-		comment.setContent("Content");
-
-		commentService.addComment(post.getId(), comment);
-
-		List<CommentDto> comments = commentService.getCommentsForPost(post.getId());
-
-		assertThat("There should be one comment", comments, hasSize(1));
-		assertThat(comments.get(0).getAuthor(), equalTo("Author"));
-		assertThat(comments.get(0).getComment(), equalTo("Content"));
-	}
 }

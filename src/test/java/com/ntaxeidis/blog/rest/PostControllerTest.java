@@ -26,7 +26,13 @@ public class PostControllerTest extends AbstractControllerTest {
 	public void shouldReturnFoundPost() throws Exception {
 		// given
 		LocalDateTime creationDate = LocalDateTime.of(2018, 5, 20, 20, 51, 16);
-		PostDto post = new PostDto("Title", "content", creationDate);
+		LocalDateTime modifiedDate = LocalDateTime.of(2018, 5, 20, 21, 12, 43);
+		PostDto post = PostDto.builder()
+			.title("Title")
+			.content("content")
+			.creationDate(creationDate)
+			.modifiedDate(modifiedDate)
+			.build();
 
 		// when
 		when(postService.getPost(1L)).thenReturn(post);
@@ -37,7 +43,8 @@ public class PostControllerTest extends AbstractControllerTest {
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.title", is("Title")))
 				.andExpect(jsonPath("$.content", is("content")))
-				.andExpect(jsonPath("$.creationDate", is(creationDate.toString())));
+				.andExpect(jsonPath("$.creationDate", is(creationDate.toString())))
+				.andExpect(jsonPath("$.modifiedDate", is(modifiedDate.toString())));
 	}
 
 	@Test
@@ -56,19 +63,34 @@ public class PostControllerTest extends AbstractControllerTest {
 		// given
 		List<CommentDto> comments = new ArrayList<>();
 		LocalDateTime creationDate = LocalDateTime.of(2018, 5, 20, 20, 51, 16);
-		comments.add(new CommentDto(2L, "comment content", "John Smith", creationDate));
+		LocalDateTime modifiedDate = LocalDateTime.of(2018, 5, 25, 13, 21, 34);
+		comments.add(CommentDto.builder()
+			.id(2L)
+			.content("John Smith")
+			.likes(0L)
+			.creationDate(creationDate)
+			.modifiedDate(modifiedDate)
+			.build());
+		PostDto post = PostDto.builder()
+			.comments(comments)
+			.title("Titlos")
+			.content("Post content")
+			.build();
 
 		// when
-		when(commentService.getCommentsForPost(1L)).thenReturn(comments);
+		when(postService.getPost(1L)).thenReturn(post);
 
 		// then
-		mockMvc.perform(get("/posts/1/comments").accept(MediaType.APPLICATION_JSON))
+		mockMvc.perform(get("/posts/1").accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$", hasSize(1)))
-			.andExpect(jsonPath("$[0].id", is(2)))
-			.andExpect(jsonPath("$[0].comment", is("comment content")))
-			.andExpect(jsonPath("$[0].author", is("John Smith")))
-			.andExpect(jsonPath("$[0].creationDate", is(creationDate.toString())));
+			.andExpect(jsonPath("$[0].title", is("Titlos")))
+			.andExpect(jsonPath("$[0].content", is("Post content")))
+			.andExpect(jsonPath("$[0].comments[0].id", is(2)))
+			.andExpect(jsonPath("$[0].comments[0].comment", is("comment content")))
+			.andExpect(jsonPath("$[0].comments[0].author", is("John Smith")))
+			.andExpect(jsonPath("$[0].comments[0].creationDate", is(creationDate.toString())))
+			.andExpect(jsonPath("$[0].comments[0].modifiedDate", is(modifiedDate.toString())));
 
 	}
 

@@ -26,21 +26,6 @@ public class CommentService {
 	}
 
 	/**
-	 * Returns a list of all comments for a blog post with passed id.
-	 *
-	 * @param postId id of the post
-	 * @return list of comments sorted by creation date descending - most recent first
-	 */
-	public List<CommentDto> getCommentsForPost(Long postId) {
-		Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
-
-		return post.getComments().stream()
-			.sorted(Comparator.comparing(Comment::getCreationDate).reversed())
-			.map(c -> new CommentDto(c.getId(), c.getComment(), c.getAuthor(), c.getCreationDate()))
-			.collect(Collectors.toList());
-	}
-
-	/**
 	 * Creates a new comment
 	 *
 	 * @param newCommentDto data of new comment
@@ -63,5 +48,49 @@ public class CommentService {
 		Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
 
 		commentRepository.delete(comment);
+	}
+
+	public void editComment(Long id, NewCommentDto newCommentDto) {
+		Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
+
+		if (newCommentDto.getAuthor() != null) {
+			comment.setAuthor(newCommentDto.getAuthor());
+		}
+		if (newCommentDto.getContent() != null) {
+			comment.setContent(newCommentDto.getContent());
+		}
+		commentRepository.save(comment);
+	}
+
+	public CommentDto getComment(Long id) {
+		Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
+		return CommentDto.builder()
+			.id(comment.getId())
+			.modifiedDate(comment.getModifiedDate())
+			.creationDate(comment.getCreationDate())
+			.likes(comment.getLikes())
+			.content(comment.getContent())
+			.thread(comment.getThread())
+			.author(comment.getAuthor())
+			.build();
+	}
+
+	public Long likeComment(Long id) {
+		return commentRepository.findById(id)
+			.map(c -> {
+				c.setLikes(c.getLikes()+1);
+				commentRepository.save(c);
+				return c.getLikes();
+			})
+			.orElseThrow(() -> new CommentNotFoundException(id));
+	}
+
+	public Long replyToComment(Long id, NewCommentDto newCommentDto) {
+		Comment comment = commentRepository.findById(id).orElseThrow(() -> new CommentNotFoundException(id));
+
+		comment.getThread().add(new Comment(newCommentDto.getContent(), newCommentDto.getAuthor()));
+		commentRepository.save(comment);
+
+		return comment.getThread().get(comment.getThread().size()-1).getId();
 	}
 }

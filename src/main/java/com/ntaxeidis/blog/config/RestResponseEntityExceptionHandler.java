@@ -12,13 +12,13 @@ import org.springframework.web.context.request.WebRequest;
 
 @ControllerAdvice
 public class RestResponseEntityExceptionHandler {
-	@ExceptionHandler(value = {PostNotFoundException.class, CommentNotFoundException.class})
+	@ExceptionHandler({PostNotFoundException.class, CommentNotFoundException.class})
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public ErrorMessage handleTokenRefreshException(PostNotFoundException ex, WebRequest request) {
+	public ErrorMessage handleTokenRefreshException(RuntimeException ex, WebRequest request) {
 		return new ErrorMessage(
 			HttpStatus.FORBIDDEN.value(),
 			new Date(),
 			ex.getMessage(),
-			request.getDescription(false));
+			request.getDescription(true));
 	}
 }
